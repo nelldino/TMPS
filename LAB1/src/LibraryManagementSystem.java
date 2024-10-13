@@ -4,7 +4,6 @@ public class LibraryManagementSystem {
 
         Menu menu = new Menu();
 
-        // Step 3: Call the displayMenu() method to start the menu interface
         menu.displayMenu();
     }
 }

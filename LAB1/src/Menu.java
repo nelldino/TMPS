@@ -1,9 +1,9 @@
 import inputhandlers.BookInputHandler;
+import inputhandlers.UserInputHandler;
 import models.Book;
-import models.User;
-import services.BookController;
-import user.UserController;
-import user.UserRepository;
+import controllers.BookController;
+import controllers.UserController;
+import services.UserRepository;
 
 import java.util.Scanner;
 
@@ -37,7 +37,8 @@ public class Menu {
             // Handle user choice
             switch (choice) {
                 case 1:
-                    BookController.addBook(Book.getBookDetails());
+                    Book ob = new BookInputHandler().getBookDetails();
+                    BookController.addBook(ob);
                     break;
 
                 case 2:
@@ -62,17 +63,17 @@ public class Menu {
                     BookController.upgradeBookQuantity();
                     break;
                 case 5:
-                    User u = new User();
+                    UserInputHandler u = new UserInputHandler();
                     UserRepository.addUser(u);
                     break;
                 case 6:
                     UserRepository.showAllUsers();
                     break;
                 case 7:
-                    UserController.returnBook();
+                    UserController.borrowBook();
                     break;
                 case 8:
-                    UserController.borrowBook();
+                    UserController.returnBook();
                     break;
                 case 9:
                     System.out.println("Exiting...");

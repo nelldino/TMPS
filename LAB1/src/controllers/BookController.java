@@ -1,4 +1,4 @@
-package services;
+package controllers;
 
 import models.Book;
 import models.PrintedBook;
@@ -85,18 +85,19 @@ public class BookController {
 
         boolean bookFound = false;
 
-        System.out.println("ISBN\t\tTitle\t\tAuthor\t\tAvailable Quantity\t\tTotal Quantity\t\tVersion");
+        System.out.println("ISBN\t\tTitle\t\tAuthor\t\tAvailable Quantity\t\tTotal Quantity\t\tType");
 
         for (int i = 0; i < count; i++) {
             //compare the input author with the author of the books from the list
             if (author.equalsIgnoreCase(theBooks[i].author)) {
-//                String versionType = ((PrintedBook) book).getType();
+//                String versionType = (book).getType();
                 System.out.println(
                         theBooks[i].ISBN + "\t\t"
                                 + theBooks[i].title + "\t\t"
                                 + theBooks[i].author + "\t\t"
                                 + theBooks[i].bookQuantity + "\t\t"
-                                + theBooks[i].bookQuantityCopy);
+                                + theBooks[i].bookQuantityCopy +"\t\t"
+                                + theBooks[i].getType());
                 bookFound = true;
                 break;
             }
@@ -113,18 +114,28 @@ public class BookController {
         System.out.println("Showing all the books");
         System.out.println("ISBN\tTitle\tAuthor\tAvailable Quantity\tTotal Quantity\tType");
         for (int i = 0; i < count; i++) {
-            Book book = theBooks[i]; // Get the current book
-            String versionType = ""; // Default empty version type
+            Book book = theBooks[i];
+            String versionType = "";
             if (book instanceof PrintedBook) {
-                versionType = ((PrintedBook) book).getType();
+                versionType = (book).getType();
                 System.out.println(
                         theBooks[i].ISBN + "\t\t"
                                 + theBooks[i].title + "\t\t"
                                 + theBooks[i].author + "\t\t"
                                 + theBooks[i].bookQuantity + "\t\t\t\t\t\t"
                                 + theBooks[i].bookQuantityCopy + "\t\t"
-                                + theBooks[i].getType() + " " + versionType);
+                                + theBooks[i].getType());
 
+            }
+            else {
+                versionType = (book).getType();
+                System.out.println(
+                        theBooks[i].ISBN + "\t\t"
+                                + theBooks[i].title + "\t\t"
+                                + theBooks[i].author + "\t\t"
+                                + theBooks[i].bookQuantity + "\t\t\t\t\t\t"
+                                + theBooks[i].bookQuantityCopy + "\t\t"
+                                + theBooks[i].getType());
             }
         }
 

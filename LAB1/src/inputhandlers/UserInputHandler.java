@@ -1,20 +1,21 @@
-package models;
+package inputhandlers;
 
-import java.util.List;
+import models.Book;
+
 import java.util.Scanner;
 
-public class User {
+public class UserInputHandler {
     public String userId;
     public String userName;
     public Book[] borrowedBooks = new Book[3];
     public int booksCount = 0;
 
     Scanner input = new Scanner(System.in);
-    public User(){
-        System.out.println("Enter models.User's name: ");
+    public UserInputHandler(){
+        System.out.println("Enter User's name: ");
         this.userName= input.nextLine();
 
-        System.out.println("Enter models.User's ID number: ");
+        System.out.println("Enter User's ID number: ");
         this.userId = input.nextLine();
     }
 

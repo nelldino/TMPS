@@ -1,99 +1,50 @@
-package user;
+package controllers;
 
 import models.Book;
-import models.User;
-import services.BookController;
+import inputhandlers.UserInputHandler;
+import services.UserRepository;
 
 import java.util.Objects;
 import java.util.Scanner;
 
+import static services.UserRepository.theUsers;
+
 public class UserController {
     static Scanner input = new Scanner(System.in);
-    static User[] theUsers = new User[50];
-
+//    static UserInputHandler[] theUsers = new UserInputHandler[50]; // Array to hold users
     public static int count = 0;
 
-    //METHOD 1
-    // To add a new user
-    public static void addUser(User u) {
-        for (int i = 0; i < count; i++) {
-            if (u.userId.equalsIgnoreCase(theUsers[i].userId)) {
-                System.out.println("models.User with ID" + u.userId + "is already registered.");
-            }
-            return;
-        }
-        if (count <= 50) {
-            theUsers[count] = u;
-            count++;
-        }
-    }
 
-    //METHOD 2
-    //Displaying all the users
-    public static void showAllUsers() {
-        System.out.println("Name\t\tID");
-        for (int i = 0; i < count; i++) {
-            System.out.println(theUsers[i].userName + "\t\t"
-                    + theUsers[i].userId);
-        }
-    }
-
-
-    //METHOD 3
-    //To check all user
-    public static int isUser(){
-        System.out.println("Enter ID number: ");
-
-        String userId = input.nextLine();
-        for (int i= 0; i<count; i++){
-            if (theUsers[i].userId.equalsIgnoreCase(userId)){
-                return i;
-            }
-        }
-        System.out.println("User is not registered.");
-        System.out.println("Get registered first.");
-        return -1;
-    }
-
-    //METHOD 4
-    // To return a book
-    public static void returnBook() {
-        int userIndex = UserController.isUser();
+    public static void borrowBook() {
+        int userIndex = UserRepository.isUser();
         if (userIndex != -1) {
-            System.out.println("Checking out.");
-
+//          System.out.println("Checking out a book for user " + theUsers[userIndex].userName);
             BookController.showAllBooks();
-
             System.out.println("Enter the ISBN of the book you want to borrow: ");
             String ISBN = input.nextLine();
-
             Book b = BookController.checkoutBook();
             if (b != null) {
                 if (theUsers[userIndex].booksCount < 3) {
                     System.out.println("Adding book to user's borrowed list.");
-
                     theUsers[userIndex].borrowedBooks[theUsers[userIndex].booksCount] = b;
                     theUsers[userIndex].booksCount++;
-
                     b.bookQuantity--;
-                    return;
+                    System.out.println("Book successfully borrowed.");
                 } else {
-                    System.out.println("models.User cannot borrow more than 3 books.");
+                    System.out.println("User cannot borrow more than 3 books.");
                 }
             } else {
-                System.out.println("models.Book is not available or doesn't exist.");
+                System.out.println("Book is not available or doesn't exist.");
             }
-        } else {
-            System.out.println("models.User not found.");
         }
     }
 
-    public static void borrowBook() {
-        int userIndex = UserController.isUser();
+    // METHOD 5: Return a book
+    public static void returnBook() {
+        int userIndex = UserRepository.isUser();
         if (userIndex != -1) {
-            User u = theUsers[userIndex];
-
-            System.out.println("Borrowed books:");
+            UserInputHandler u = theUsers[userIndex];
+            System.out.println("Borrowed books for user " + u.userName + ":");
             System.out.println("ISBN\t\tTitle\t\tAuthor");
 
             for (int i = 0; i < u.booksCount; i++) {
@@ -109,26 +60,21 @@ public class UserController {
 
             for (int i = 0; i < u.booksCount; i++) {
                 if (u.borrowedBooks[i] != null && Objects.equals(ISBN, u.borrowedBooks[i].ISBN)) {
-
                     BookController.checkInBook(u.borrowedBooks[i]);
-
                     u.borrowedBooks[i] = null;
 
-
+                    // Shift borrowed books after returning
                     for (int j = i; j < u.booksCount - 1; j++) {
                         u.borrowedBooks[j] = u.borrowedBooks[j + 1];
                     }
                     u.booksCount--;
 
-                    System.out.println("models.Book successfully returned.");
+                    System.out.println("Book successfully returned.");
                     return;
                 }
             }
 
             System.out.println("No book with ISBN " + ISBN + " was found in the user's borrowed list.");
-        } else {
-            System.out.println("models.User not found.");
         }
     }
-
 }

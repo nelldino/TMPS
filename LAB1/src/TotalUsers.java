@@ -1,5 +1,5 @@
 //import models.Book;
-//import models.User;
+//import inputhandlers.User;
 //
 //import java.util.Objects;
 //import java.util.Scanner;
@@ -15,7 +15,7 @@
 //    public static void addUser(User u) {
 //        for (int i = 0; i < count; i++) {
 //            if (u.userId.equalsIgnoreCase(theUsers[i].userId)) {
-//                System.out.println("models.User with ID" + u.userId + "is already registered.");
+//                System.out.println("inputhandlers.User with ID" + u.userId + "is already registered.");
 //            }
 //            return;
 //        }
@@ -75,13 +75,13 @@
 //                    b.bookQuantity--;
 //                    return;
 //                } else {
-//                    System.out.println("models.User cannot borrow more than 3 books.");
+//                    System.out.println("inputhandlers.User cannot borrow more than 3 books.");
 //                }
 //            } else {
 //                System.out.println("models.Book is not available or doesn't exist.");
 //            }
 //        } else {
-//            System.out.println("models.User not found.");
+//            System.out.println("inputhandlers.User not found.");
 //        }
 //    }
 //
@@ -124,7 +124,7 @@
 //
 //            System.out.println("No book with ISBN " + ISBN + " was found in the user's borrowed list.");
 //        } else {
-//            System.out.println("models.User not found.");
+//            System.out.println("inputhandlers.User not found.");
 //        }
 //    }
 //
