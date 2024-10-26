@@ -19,7 +19,7 @@ public class ArtGalleryApp {
             System.out.println("1. Add Artwork");
             System.out.println("2. Display All Artworks");
             System.out.println("3. Search Artworks");
-            System.out.println("4. Create gallery.Exhibition");
+            System.out.println("4. Create an Exhibition");
             System.out.println("5. Display Exhibitions");
             System.out.println("6. Exit");
             System.out.print("Choose an option: ");
