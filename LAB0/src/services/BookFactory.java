@@ -4,8 +4,6 @@ import models.Book;
 import models.EBook;
 import models.PrintedBook;
 
-import java.util.Objects;
-import java.util.Scanner;
 
 public class BookFactory {
     public static Book createBook(int bookType, String title, String author, String ISBN, int quantity, String extraDetail) {

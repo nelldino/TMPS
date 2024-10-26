@@ -17,11 +17,11 @@ public class BookInputHandler {
         String ISBN = input.nextLine();
         System.out.println("Enter the quantity of books: ");
         int quantity = input.nextInt();
-        input.nextLine(); // Consume the newline
+        input.nextLine();
 
-        System.out.println("Is this an E-Book or Printed Book? (1 for E-Book, 2 for Printed Book): ");
+        System.out.println("Is this an E-Book or Printed Book? (1.E-Book, 2.Printed Book): ");
         int bookType = input.nextInt();
-        input.nextLine(); // Consume the newline
+        input.nextLine();
 
         String extraDetail;
         if (bookType == 1) {

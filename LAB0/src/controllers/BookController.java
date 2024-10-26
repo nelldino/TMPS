@@ -55,7 +55,7 @@ public class BookController {
 
         boolean bookFound = false;
 
-        System.out.println("ISBN\t\tTitle\t\tAuthor\t\tAvailable Quantity\t\tTotal Quantity");
+        System.out.println("ISBN\t\tTitle\t\tAuthor\t\tAvailable Quantity\t\tTotal Quantity\\Type");
 
         for (int i = 0; i < count; i++) {
             //compare the inout ISBN with the ISBN of the books from the list
@@ -164,10 +164,10 @@ public class BookController {
         for (int i=0; i<count; i++){
             if(Objects.equals(ISBN, theBooks[i].ISBN)){
                 if (theBooks[i].bookQuantityCopy>0){
-                    System.out.println("models.Book is available.");
+                    System.out.println("Book is available.");
                     return i;
                 }
-                System.out.println("models.Book is unavailable.");
+                System.out.println("Book is unavailable.");
             }
         }
         System.out.println("No book with ISBN" +ISBN+ "is available in the library.");
