@@ -121,7 +121,6 @@ In my case, the Builder pattern was helpful, since I wanted to search an artwork
 
 ## Conclusions 
 In this laboratory work, I made an implementation of an Art Gallery, using 3 creational patterns - Singleton, Factory Method and Builder. The Singleton patterns ensures a centralized management of artworks for the exhibitions data. The Factory Method enables a flexible creation of different artwork types, such as paintings and scultpures (in my case). In addition, the Builder patters allows to create a search filter with optional patters, which makes it adaptable to user's needs. 
-![image](https://github.com/user-attachments/assets/5c4c1c28-bd58-43ba-bf47-40f12649a841)
 
 ## Screenshots
 ![image](https://github.com/user-attachments/assets/33d48254-14cb-44d1-a139-66c28a5f3068)
@@ -135,5 +134,3 @@ In this laboratory work, I made an implementation of an Art Gallery, using 3 cre
 [1] https://www.geeksforgeeks.org/creational-design-pattern/
 
 [2] https://refactoring.guru/design-patterns/creational-patterns
-
-P.S please be nice to me 
