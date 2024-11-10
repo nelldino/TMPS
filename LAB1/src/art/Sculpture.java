@@ -15,7 +15,7 @@ public class Sculpture implements Artwork {
     }
 
     @Override
-    public void display() {
+    public void displayDetails() {
         System.out.println("Type: Painting");
         System.out.println("Author: " + author);
         System.out.println("Title: " + title);

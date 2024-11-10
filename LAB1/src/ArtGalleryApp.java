@@ -1,5 +1,9 @@
 
+import adapters.ArtworkAdapter;
+import adapters.DescribableArtwork;
 import art.Artwork;
+import decorator.FeaturedArtworkDecorator;
+import decorator.LimitedEditionDecorator;
 import factories.PaintingFactory;
 import factories.SculptureFactory;
 import gallery.ArtGallery;
@@ -21,7 +25,9 @@ public class ArtGalleryApp {
             System.out.println("3. Search Artworks");
             System.out.println("4. Create an Exhibition");
             System.out.println("5. Display Exhibitions");
-            System.out.println("6. Exit");
+            System.out.println("6. Decorate Artwork");
+            System.out.println("7. Display a specific artwork");
+            System.out.println("8. Exit");
             System.out.print("Choose an option: ");
 
             int choice = scanner.nextInt();
@@ -82,7 +88,7 @@ public class ArtGalleryApp {
                     } else {
                         for (Artwork result : results) {
                             System.out.println("------------------------------------");
-                            result.display();
+                            result.displayDetails();
                             System.out.println("------------------------------------");
                         }
                     }
@@ -113,7 +119,7 @@ public class ArtGalleryApp {
                         }
                     }
                     gallery.addExhibition(exhibition);
-                    System.out.println("gallery.Exhibition created successfully!");
+                    System.out.println("Exhibition created successfully!");
                     break;
 
                 case 5:
@@ -121,6 +127,56 @@ public class ArtGalleryApp {
                     break;
 
                 case 6:
+                    System.out.print("Enter title of artwork to decorate: ");
+                    String decorateTitle = scanner.nextLine();
+
+                    Artwork artworkToDecorate = gallery.getArtworks().stream()
+                            .filter(a -> a.getTitle().equalsIgnoreCase(decorateTitle))
+                            .findFirst()
+                            .orElse(null);
+
+                    if (artworkToDecorate == null) {
+                        System.out.println("Artwork not found.");
+                        break;
+                    }
+
+                    System.out.println("Select decoration: 1) Featured 2) Limited Edition");
+                    int decorationChoice = scanner.nextInt();
+                    scanner.nextLine();
+
+                    Artwork decoratedArtwork;
+                    if (decorationChoice == 1) {
+                        decoratedArtwork = new FeaturedArtworkDecorator(artworkToDecorate);
+                    } else if (decorationChoice == 2) {
+                        decoratedArtwork = new LimitedEditionDecorator(artworkToDecorate);
+                    } else {
+                        System.out.println("Invalid decoration choice.");
+                        break;
+                    }
+
+                    System.out.println("Artwork with decoration:");
+                    decoratedArtwork.displayDetails();
+                    break;
+
+                case 7:
+                    System.out.print("Enter title of artwork to display: ");
+                    String displayTitle = scanner.nextLine();
+
+                    Artwork artworkToDisplay = gallery.getArtworks().stream()
+                            .filter(a -> a.getTitle().equalsIgnoreCase(displayTitle))
+                            .findFirst()
+                            .orElse(null);
+
+                    if (artworkToDisplay == null) {
+                        System.out.println("Artwork not found.");
+                        break;
+                    }
+
+                    DescribableArtwork describableArtwork = new ArtworkAdapter(artworkToDisplay);
+                    System.out.println(describableArtwork.getDescription());
+                    break;
+
+                case 8:
                     System.out.println("Exiting...");
                     scanner.close();
                     return;

@@ -54,7 +54,7 @@ public class ArtGallery {
         } else {
             for (Artwork artwork : artworks) {
                 System.out.println("------------------------------------");
-                artwork.display();
+                artwork.displayDetails();
                 System.out.println("------------------------------------");
             }
         }
