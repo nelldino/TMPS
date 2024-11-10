@@ -1,170 +1,136 @@
-#  Laboratory work 0 - SOLID principles
+#  Laboratory work 1 - Creational Design Patterns
 
 ### Author: Nelli Garbuz
 
 ----
 ## Task:
 
-1.Implement two SOLID letters in a simple project
+1. Study and understand the Creational Design Patterns.
+
+2. Choose a domain, define its main classes/models/entities and choose the appropriate instantiation mechanisms.
+
+3. Use some creational design patterns for object instantiation in a sample project.
 
 ## Theory
 
-SOLID is an acronym for the first five object-oriented design (OOD).
+Creational Design Patterns focus on the process of object creation or problems related to object creation. They help in making a system independent of how its objects are created, composed, and represented. Creational patterns give a lot of flexibility in what gets created, who creates it, and how it gets created. There are two main themes in these patterns:
 
-SOLID stands for:
+* They keep information about the specific classes used in the system hidden.
+* They hide the details of how instances of these classes are created and assembled. [1]
 
-* **S - Single-responsibility Principle** - a class should have one and only one reason to change, meaning that a class should have only one job.
+The Creational Design Patterns are: [2]
 
-* **O - Open-closed Principle** - objects or entities should be open for extension but closed for modification.
-
-* **L - Liskov Substitution Principle** -let q(x) be a property provable about objects of x of type T. Then q(y) should be provable for objects y of type S where S is a subtype of T. This means that every subclass or derived class should be substitutable for their base or parent class.
-
-* **I - Interface Segregation Principle** - a client should never be forced to implement an interface that it doesn’t use, or clients shouldn’t be forced to depend on methods they do not use.
-
-* **D - Dependency Inversion Principle** - entities must depend on abstractions, not on concretions. It states that the high-level module must not depend on the low-level module, but they should depend on abstractions. [1]
-
+* Factory Method - provides an interface for crating objects in a superclass, but allows subclasses to alter the type of the objects that will be created
+* Abstract Method - Lets one to produce families of related objects without specifying their concrete classes
+* Builder - lets one to construct complex objects step by step. The pattern allows to produce different types and representations of an object using the same construction code
+* Prototype - lets one copy existing objects without making code dependent on their classes
+* Singleton - ensure that class has only one instance, while providing a global access point to this instance
 
 ## Implementation description
 
-In my project I implemented the SRP and LSP from SOLID.
+In my project I implemented 3 Creational Patterns - Singleton, Factory Method and Builder.
 
-**SRP - Single-Responsibility Principle**
+I decided to make an Art Gallery Management System, where a user can:
 
-To make a library system management, I need to have a class for books and also users that can register to borrow/return books.
+* Add artworks (paintings or sculptures)
+* Display all the artworks from the gallery
+* Search for a specific artwork (by title or author)
+* Creating an exhibition
+* Displaying all the exhibitions
 
-So, for the part of storing books, I created 3 classes, each with its own repsonisbility:
+**Singleton Pattern**
 
-* Book only manages book-related details like title, author, ISBN.
-  
-* BookFactory is responsible for creating specific book objects (like EBook or PrintedBook), depending on the user's input.
-  
-* BookInputHandler is responsible for getting the inputs from the user, such as title, author, ISBN of the book.
-  
-* BookController responsible for all the operations regarding the books (such as adding a new book, showing all the books, checking in our checking out a book)
+For the Singleton Pattern I created the class ```Art Gallery```, that ensures that there is only one instance of it across the application and manages the collections of all artworks and exhibitions.
+For the implementation of the pattern I have the ```getInstance()``` method that provides a single access point to the  ```Art Gallery instance```, creting it if it does not already exist.
 
-Because each class has its own different function, I split all of them in different packages (inpundhandlers, models, services,controllers)
+``` public class ArtGallery {
+    private static ArtGallery instance;
+    private List<Artwork> artworks;
+    private List<Exhibition> exhibitions;
 
-```Book.java class``` 
+ private ArtGallery() {
+        artworks = new ArrayList<>();
+        exhibitions = new ArrayList<>();
+    }
+``` 
+Public Static Method to Get the Instance:
+```getInstance()``` is the only way to access the ```ArtGallery``` instance. When ```getInstance()``` is called for the first time, it checks if ```instance``` is ```null```.If it is, a new ```ArtGallery``` instance is created, initializing ```instance``` with that new object (a method called lazy initialization).           
+```   
+
+    public static ArtGallery getInstance() {
+        if (instance == null) {
+            instance = new ArtGallery();
+        }
+        return instance;
+    }
+```
+Once the ```ArtGallery``` instance is created the first time ```getInstance()``` is called, every future call to ```getInstance()``` just returns that same instance without creating a new one. This way, the ```ArtGallery``` class always has a single, shared instance for the whole program.
+
+**Factory Method Pattern**
+
+For the Factory Method I have 3 classes: 
+* ```ArtworkFactory``` (which is an abstract factory)
+* ```PaintingFactory```
+* ```SculptureFactory```
+
+The Factory Method Pattern implements the creation logic for the different types of artworks, allowing to add a new type without having to change the core application code.  
+Each factory subclass (e.g ```PaintingFactory```) provides a wat to instantiate types of ```Artwork```, keeping ```ArtGalleryApp``` decoupled from specific artwork types.
 
 ```
-public Book(String title, String author, String ISBN, int bookQuantity) {
-   this.title = title;
-        this.author = author;
-        this.ISBN = ISBN;
-        this.bookQuantity = bookQuantity;
-        this.bookQuantityCopy = bookQuantity;
+public class PaintingFactory extends ArtworkFactory {
+    public Artwork createArtwork(String author, String title, String medium, String size) {
+        return new Painting(author, title, medium, size);
+    }
+}
+
+public class SculptureFactory extends ArtworkFactory {
+    public Artwork createArtwork(String author, String title, String medium, String size) {
+        return new Sculpture(author, title, medium, size);
+    }
 }
 ```
-```BookFactory class```
 
-```public class BookFactory {
-    public static Book createBook(int bookType, String title, String author, String ISBN, int quantity, String extraDetail) {
-        if (bookType == 1) {
-            return new EBook(title, author, ISBN, quantity, extraDetail); // File Size for E-Book
-        } else {
-            return new PrintedBook(title, author, ISBN, quantity, extraDetail); // Version Type for Printed Book
+***Builder Pattern**
+
+Builder Pattern provides a flexible way to create search filters by allowing optional criteria like title and author. 
+
+```SearchFilter.Builder``` allows step-by-step construction of the ```SearchFilter``` object, making it easy to add additional search parameters if needed. 
+
+``` public static class Builder {
+        private String title;
+        private String author;
+
+        public Builder title(String title) {
+            this.title = title;
+            return this;
         }
-    }
-}
-```
 
-```BookInputHandler.class```
-
-This is the class responsible for getting the user's input, but most importnat it handles different types of books.
-
-```
-System.out.println("Is this an E-Book or Printed Book? (1.E-Book, 2.Printed Book): ");
-        int bookType = input.nextInt();
-        input.nextLine();
-
-        String extraDetail;
-        if (bookType == 1) {
-            System.out.println("Enter the file size of the E-Book: ");
-            extraDetail = input.nextLine();
-        } else {
-            System.out.println("Enter the version type of the Printed Book: ");
-            extraDetail = input.nextLine();
+        public Builder author(String author) {
+            this.author = author;
+            return this;
         }
 ```
-
-```BookController``` has the following methods:
-
-* compareBookObjects(): to handle that a book with the same title or ISBN code is added only once.
-* addBook (): adds a new book in the "library"
-* searchByISBN(): allows the user to get information about a book based on the ISBN code
-* searchByAuthor(): allows the user to get information about a book based on the author's name
-* showAllBooks(): will output all of the books in the library
-* upgradeBookQuantity(): make sit possible to add the same book in more copies
-* isAvailable(): checks if the book with a specific ISBN is in the library or not
-* checkoutBook(): retrieves a ook from the library
-* checkInBook(): adds the borrowed book back in the library
-
-For the user part, I did the same thing:
-
-* UserInputHandler is responsible for getting the inputs from the user, such as name and ID for a library user.
-
-* UserController responsible for handling user-related logic like registering, borrowing, and returning books, based on the ISBN of the book.
-
-* UserRepository manages user storage and retrieval (has methods such as adding a new user, verifying an user and showing all the users)
-
-The same logic was applied here, and each class is split in different packages (inputhadlers, controllers, services)
-
-```UserInputHandler.java```
+In ```SearchFilter```, a private constructor takes a ```Builder``` instance and copies its values to the fields in ```SearchFilter```. This ensures only the Builder can create ```SearchFilter``` instances, enforcing the use of the ```Builder ```pattern.
 ```
-    public UserInputHandler(){
-        System.out.println("Enter User's name: ");
-        this.userName= input.nextLine();
-
-        System.out.println("Enter User's ID number: ");
-        this.userId = input.nextLine();
+        public SearchFilter build() {
+            return new SearchFilter(this);
+        }
     }
 ```
-```UserRepository``` includes:
+In my case, the Builder pattern was helpful, since I wanted to search an artwork based wither on the title or the painter's/sculptor's name, (considered in some cases optional parameters).
 
-* addUser(): adds a new user with a unique name and ID
-  
-* showAllUsers(): display all registered users at the library
-
-* isUser(): checks if a user with a specific ID is registeres already or not
-
-```UserController``` has the following main methods:
-
-* borrowBook(): implements the logic of "borrowing" a book based on its ISBN code and it becomes attached to the user's profile
-  
-* returnBook(): represents the return process of a book 
-
-**LSP - Liskov Substitution Principle**
-
-To implement this principle, I decided to extend the class ```Book```, and created two other subclasses ```E-book``` and ```PrintedBook```. ```PrintedBook``` and ```Ebook``` extends ```Book``` and overrides the getType() method.
-
-For The Ebook part, the usee will input the same details as for a simple book, but it will also specify the file size of the electronic book.
-```
-public EBook(String title, String author, String ISBN, int bookQuantity, String fileSize) {
-        super(title, author, ISBN, bookQuantity);
-        this.fileSize = fileSize;
-    }
-```
-
-The same goes for the printed version of the book, and in this case, the user can specify which type it is (Hardcover, Paperback etc.)
-
-```
-public PrintedBook(String title, String author, String ISBN, int bookQuantity, String versionType) {
-        super(title, author, ISBN, bookQuantity);
-        this.versionType = versionType;
-    }
-```
-
-In addition to this, I made a menu, based on the user's choice and manages the flow of the application.
 ## Conclusions 
-In this laboratory work, I made an implementation of a Library Management System using two letters of SOLID principles (Single Responsibility Principle (SRP) and the Liskov Substitution Principle (LSP)).
+In this laboratory work, I made an implementation of an Art Gallery, using 3 creational patterns - Singleton, Factory Method and Builder. The Singleton patterns ensures a centralized management of artworks for the exhibitions data. The Factory Method enables a flexible creation of different artwork types, such as paintings and scultpures (in my case). In addition, the Builder patters allows to create a search filter with optional patters, which makes it adaptable to user's needs. 
 
-Refactoring key classes to comply with SRP ensured that each class had a single, well-defined responsibility, making the system easier to extend and debug. This helped to create classes that are easier to understand and I could create a more organized code.
-By implementing the LSP, I ensured that subclasses such as PrintedBook and EBook could be used interchangeably with their superclass Book, without compromising the integrity of the system.
-
-In conclusion, adhering to some of the SOLID principles helped with adding enhancements, making it easier for creating a libary system with a book catalog and user interactions.
-
-![8a562201b31c42400ad6f51255932bb3 1](https://github.com/user-attachments/assets/9a0a580b-f174-437e-b6ea-1927d6729e9f)
+## Screenshots
+![image](https://github.com/user-attachments/assets/33d48254-14cb-44d1-a139-66c28a5f3068)
+![image](https://github.com/user-attachments/assets/3073cbdd-e506-474a-a7da-637b1582c551)
+![image](https://github.com/user-attachments/assets/fb2c243c-a473-4123-877e-6c6810a38d76)
+![image](https://github.com/user-attachments/assets/25305498-fa5b-4634-b573-414f357f1278)
+![image](https://github.com/user-attachments/assets/1e8076f0-a08a-4db3-8dbd-ae4fc3596f06)
 
 
 ## Bibliography
-[1] https://www.digitalocean.com/community/conceptual-articles/s-o-l-i-d-the-first-five-principles-of-object-oriented-design
+[1] https://www.geeksforgeeks.org/creational-design-pattern/
+
+[2] https://refactoring.guru/design-patterns/creational-patterns
