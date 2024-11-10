@@ -25,7 +25,7 @@ public class ArtGalleryApp {
             System.out.println("3. Search Artworks");
             System.out.println("4. Create an Exhibition");
             System.out.println("5. Display Exhibitions");
-            System.out.println("6. Decorate Artwork");
+            System.out.println("6. Categorize an Artwork");
             System.out.println("7. Display a specific artwork");
             System.out.println("8. Exit");
             System.out.print("Choose an option: ");
@@ -95,7 +95,7 @@ public class ArtGalleryApp {
                     break;
 
                 case 4:
-                    System.out.print("Enter gallery.Exhibition Title: ");
+                    System.out.print("Enter Exhibition Title: ");
                     String exhibitionTitle = scanner.nextLine();
                     Exhibition exhibition = new Exhibition(exhibitionTitle);
 

@@ -23,22 +23,21 @@ public class Exhibition implements Artwork {
     public void displayDetails() {
         System.out.println("Exhibition Title: " + exhibitionTitle);
         for (Artwork artwork : artworks) {
-            artwork.displayDetails(); // Delegate display to each Artwork
+            artwork.displayDetails();
         }
     }
 
-    // New method to display the exhibition
     public void displayExhibition() {
         System.out.println("Exhibition Title: " + exhibitionTitle);
         System.out.println("Artworks in this exhibition:");
         for (Artwork artwork : artworks) {
-            artwork.displayDetails(); // Display details of each artwork
+            artwork.displayDetails();
         }
     }
 
     @Override
     public String getAuthor() {
-        return null; // Not applicable for an exhibition
+        return null;
     }
 
     @Override
@@ -48,11 +47,11 @@ public class Exhibition implements Artwork {
 
     @Override
     public String getMedium() {
-        return null; // Not applicable for an exhibition
+        return null;
     }
 
     @Override
     public String getSize() {
-        return null; // Not applicable for an exhibition
+        return null;
     }
 }
