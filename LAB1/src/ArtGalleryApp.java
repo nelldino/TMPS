@@ -8,7 +8,10 @@ import factories.PaintingFactory;
 import factories.SculptureFactory;
 import gallery.ArtGallery;
 import gallery.Exhibition;
+import search.AuthorSearchStrategy;
+import search.SearchContext;
 import search.SearchFilter;
+import search.TitleSearchStrategy;
 
 import java.util.List;
 import java.util.Scanner;
@@ -71,29 +74,28 @@ public class ArtGalleryApp {
                     break;
 
                 case 3:
-                    System.out.print("Enter Title to search (leave blank if not needed): ");
-                    String searchTitle = scanner.nextLine();
-                    System.out.print("Enter Author to search (leave blank if not needed): ");
-                    String searchAuthor = scanner.nextLine();
+                    SearchContext context = new SearchContext();
 
-                    SearchFilter filter = new SearchFilter.Builder()
-                            .title(searchTitle.isEmpty() ? null : searchTitle)
-                            .author(searchAuthor.isEmpty() ? null : searchAuthor)
-                            .build();
+                    System.out.println("Choose search type: 1) Author 2) Title");
+                    int searchType = scanner.nextInt();
+                    scanner.nextLine();
 
-                    List<Artwork> results = gallery.searchArtworks(filter);
-                    System.out.println("Search Results:");
-                    if (results.isEmpty()) {
-                        System.out.println("No artworks found matching the criteria.");
+                    if (searchType == 1) {
+                        context.setStrategy(new AuthorSearchStrategy());
+                        System.out.print("Enter author name: ");
+                        author = scanner.nextLine();
+                        context.executeSearch(gallery.getArtworks(), author)
+                                .forEach(Artwork::displayDetails);
+                    } else if (searchType == 2) {
+                        context.setStrategy(new TitleSearchStrategy());
+                        System.out.print("Enter title: ");
+                        title = scanner.nextLine();
+                        context.executeSearch(gallery.getArtworks(), title)
+                                .forEach(Artwork::displayDetails);
                     } else {
-                        for (Artwork result : results) {
-                            System.out.println("------------------------------------");
-                            result.displayDetails();
-                            System.out.println("------------------------------------");
-                        }
+                        System.out.println("Invalid search type.");
                     }
                     break;
-
                 case 4:
                     System.out.print("Enter Exhibition Title: ");
                     String exhibitionTitle = scanner.nextLine();
