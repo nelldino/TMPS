@@ -1,0 +1,106 @@
+#Laboratory work 3 - Behavioural Design Patterns
+
+### Author: Nelli Garbuz
+
+----
+## Task:
+
+1. Study and understand the Behavioral Design Patterns.
+
+2. As a continuation of the previous laboratory work, think about what communication between software entities might be involed in your system.
+
+3. Implement some additional functionalities using behavioral design patterns.
+
+## Theory
+
+Behavioral design patterns are a category of design patterns that focus on the interactions and communication between objects. They help define how objects collaborate and distribute responsibility among them, making it easier to manage complex control flow and communication in a system. [1]
+
+The Behavioural Patterns are:
+
+1. Chain Of Responsibility - allows passing rquests along a chain of handlers. Upon receinving a request, each handler decides either to process the request or to pass it to the next handler in the chain
+2. Command - turns a request into a stand-alone object that contains all information about the request. 
+3. Interpreter -defines a way to interpret and evaluate language grammar or expressions. It provides a mechanism to evaluate sentences in a language by representing their grammar as a set of classes
+4. Mediator - reduces chaotic dependencies between objects. The pattern restricts direct communications between the objects and forces them to collaborate only via mediator object.
+5. Memento  - allows one to save and restore the previous state of an object without revealing the details of its implementation
+6. Observers- defines a subscription mechanism to notify multiple objects about any events that happent to the object they're observing
+7. State - allows an object to alter its behaviour when its internal stae changes. It appears as if the object changed its class
+8. Strategy - defines a family of algorithms, put each of them into a separate class, and make their objects interchangeable
+9. Template- defines a skeleton of an algorithm in the superclass but allows subclasses override specific steps of the algorithm without changing its structure
+10. Visitor - separates algorithms from the objects on which they operate
+
+
+In my project I implemented one Behavioural Pattern - Strategy. And I decided to change my Search Filter using the Behavioural Pattern
+
+The previous functionalities implemented for my Art Gallery Management System:
+
+* Add artworks (paintings or sculptures)
+* Display all the artworks from the gallery
+* Search for a specific artwork (by title or author)
+* Creating an exhibition
+* Displaying all the exhibitions
+* Categorize an artwork (limited or featured edition)
+* Display a specific artwork
+
+**Strategy Pattern**
+
+The structure of the Strategy Patter is:
+
+1. Strategy Interface - in my case, I have ```SearchStrategy``` interface that defines the contract for all search strategies
+For the Pattern, I have an interface ```DedcribableArtwork``` and a class ```ArtworkAdapter```. This class implements the DescribableArtwork interface, which allows to get a description of the artwork using the getDescription() method. It internally assigns the description logic to the original Artwork class.
+
+```public interface SearchStrategy {
+    List<Artwork> search(List<Artwork> artworks, String criteria);
+}
+```
+2. Concrete Strategies - I have 2, the Author and Title (```AuthorSearchStrategy``` ```TitleSearchStrategy```) classes that implement ```SearchStrategy``` interface, providing specific algorithms for searching by author and title, respectively,
+As mentioned previously, this allows for the user to get the description of a specific artwork based on its name.
+
+``` 
+public class AuthorSearchStrategy implements SearchStrategy {
+    @Override
+    public List<Artwork> search(List<Artwork> artworks, String author) {
+        return artworks.stream()
+                .filter(a -> a.getAuthor().equalsIgnoreCase(author))
+                .collect(Collectors.toList());
+    }
+}
+```
+3. Context - the ```SearchContext``` class acts as the Context that holds a reference to a ```SearchStrategy``` object. It delegates the search operation to the strategy.
+
+```
+public class SearchContext {
+    private SearchStrategy strategy;
+
+    public void setStrategy(SearchStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public List<Artwork> executeSearch(List<Artwork> artworks, String criteria) {
+        if (strategy == null) {
+            throw new IllegalStateException("Search strategy not set");
+        }
+        return strategy.search(artworks, criteria);
+    }
+}
+```
+
+
+
+## Conclusions 
+In this laboratory work, I enhanced the functionality of my Art Gallery system by implementing three structural design patterns: Adapter, Composite, and Decorator. The Adapter pattern enables integration by allowing artworks to be displayed in various formats without altering their original structure. The Composite pattern provides a way to manage collections of artworks and exhibitions as individual or grouped entities, simplifying complex gallery structures. In addition to this, the Decorator pattern adds additional enhancements to artworks, such as featured or limited edition tags, without modifying the core artwork classes.
+
+## Screenshots
+![image](https://github.com/user-attachments/assets/544221bd-6e09-431b-8c80-ae611798dec7)
+![image](https://github.com/user-attachments/assets/be73dfbb-1a45-4d3a-b05f-3e154ec2de0f)
+![image](https://github.com/user-attachments/assets/d9d154c2-24cc-4a89-bc96-295612e9296f)
+![image](https://github.com/user-attachments/assets/ab92277a-e51d-4738-b868-98f9db48460f)
+
+
+
+## Bibliography
+[1] https://www.geeksforgeeks.org/behavioral-design-patterns/
+
+[2] https://refactoring.guru/design-patterns/structural-patterns
+
+
+
